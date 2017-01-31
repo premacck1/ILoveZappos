@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="zappos_theme_button">#254e7b</color>
+    <color name="zappos_theme_button_click">#4cccf1</color>
+</resources>
