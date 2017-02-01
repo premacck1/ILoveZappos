@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ILoveZappos</string>
+    <string name="activity_main_search_hint">Shoes, Clothing, Bags, etc.</string>
 </resources>
