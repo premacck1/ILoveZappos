@@ -5,8 +5,6 @@
     <color name="colorPrimary">#254e7b</color>
     <color name="colorPrimaryDark">#111111</color>
     <color name="colorAccent">#4cccf1</color>
-    <color name="theme_button">#254e7b</color>
-    <color name="theme_button_click">#4cccf1</color>
     <color name="theme_search_button">#ff5d00</color>
     <color name="theme_search_button_click">#ff7d33</color>
     <color name="light_gray">#FF888888</color>

@@ -1,4 +1,4 @@
-package com.tsungweiho.ilovezappos.Object;
+package com.tsungweiho.ilovezappos.object;
 
 /**
  * Created by tsung on 2017/1/30.

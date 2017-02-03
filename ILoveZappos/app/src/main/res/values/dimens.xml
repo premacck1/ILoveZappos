@@ -2,5 +2,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="activity_main_title_logo_size">60dp</dimen>
+    <dimen name="activity_main_title_logo_size">56dp</dimen>
+    <dimen name="activity_main_double_title_logo_size">112dp</dimen>
+
+    <!--follow material design rules-->
+    <dimen name="activity_main_space">4dp</dimen>
+    <dimen name="activity_main_img_size">240dp</dimen>
+    <dimen name="activity_main_floating_btn_margin">16dp</dimen>
 </resources>
