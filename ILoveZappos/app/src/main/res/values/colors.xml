@@ -8,4 +8,5 @@
     <color name="theme_search_button">#ff5d00</color>
     <color name="theme_search_button_click">#ff7d33</color>
     <color name="light_gray">#FF888888</color>
+    <color name="light_red">#ff0033</color>
 </resources>

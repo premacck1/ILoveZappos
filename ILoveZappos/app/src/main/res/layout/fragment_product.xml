@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="product"
+            type="com.tsungweiho.ilovezappos.objects.Product" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/fragment_product_layout_product"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fragment_product_tv_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_main_space"
+                    android:gravity="center_horizontal"
+                    android:text="@string/activity_main_loading"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <ImageView
+                    android:id="@+id/fragment_product_iv_product"
+                    android:layout_width="@dimen/activity_main_img_size"
+                    android:layout_height="@dimen/activity_main_img_size"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/activity_main_space"
+                    android:src="@mipmap/img_product_preload" />
+
+                <TextView
+                    android:id="@+id/fragment_product_tv_brand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_main_space"
+                    android:gravity="center_horizontal"
+                    android:text="@string/activity_main_loading"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_main_space"
+                    android:gravity="center_horizontal"
+                    android:text="@string/activity_main_loading"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_main_space"
+                    android:gravity="center_horizontal"
+                    android:text="@string/activity_main_loading"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_product_tv_start"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/activity_main_start_search"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/light_gray"
+                android:visibility="gone" />
+
+            <!--follow material deisgn rults-->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fragment_product_btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_add"
+                android:tint="@color/white"
+                app:backgroundTint="@color/colorPrimary"
+                app:fabSize="auto"
+                app:layout_anchor="@id/fragment_product_layout_product"
+                app:layout_anchorGravity="bottom|right|end"
+                app:useCompatPadding="true" />
+        </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
+</layout>

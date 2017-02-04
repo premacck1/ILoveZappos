@@ -7,4 +7,5 @@
     <dimen name="activity_main_title_logo_size">78dp</dimen>
     <dimen name="activity_main_double_title_logo_size">156dp</dimen>
     <dimen name="activity_main_floating_btn_margin">24dp</dimen>
+    <dimen name="activity_main_notification_icon">24dp</dimen>
 </resources>

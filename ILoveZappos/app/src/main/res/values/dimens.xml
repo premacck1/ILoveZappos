@@ -9,4 +9,5 @@
     <dimen name="activity_main_space">4dp</dimen>
     <dimen name="activity_main_img_size">240dp</dimen>
     <dimen name="activity_main_floating_btn_margin">16dp</dimen>
+    <dimen name="activity_main_notification_icon">16dp</dimen>
 </resources>

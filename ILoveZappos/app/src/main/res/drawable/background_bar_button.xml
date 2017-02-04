@@ -1,19 +1,19 @@
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@color/colorAccent"
+        android:drawable="@drawable/background_rectangle_lightblue"
         android:state_focused="true"
         android:state_pressed="true"/>
     <item
-        android:drawable="@color/colorPrimary"
+        android:drawable="@drawable/background_rectangle_lightblue"
         android:state_focused="false"
         android:state_pressed="true"/>
     <item
-        android:drawable="@color/colorPrimary"
+        android:drawable="@drawable/background_rectangle_lightblue"
         android:state_focused="true"
         android:state_pressed="false"/>
     <item
-        android:drawable="@color/colorPrimary"
+        android:drawable="@drawable/background_rectangle_blue"
         android:state_focused="false"
         android:state_pressed="false"/>
 </selector>
