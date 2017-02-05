@@ -7,6 +7,6 @@ package com.tsungweiho.ilovezappos.constants;
 public interface URLConstants {
 
     //Example: https://api.zappos.com/Search?term=nike&key=b743e26728e16b81da139182bb2094357c31d331
-    String QUERY_URL = "https://api.zappos.com/Search?";
-    String QUERY_KEY = "b743e26728e16b81da139182bb2094357c31d331";
+    String SERVER_QUERY_URL = "https://api.zappos.com/Search?term=";
+    String QUERY_KEY = "key=b743e26728e16b81da139182bb2094357c31d331";
 }

@@ -1,42 +1,44 @@
 package com.tsungweiho.ilovezappos;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
+import android.graphics.drawable.Icon;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ActionMenuView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tsungweiho.ilovezappos.constants.FragmentTag;
 import com.tsungweiho.ilovezappos.fragments.ProductFragment;
-import com.tsungweiho.ilovezappos.objects.Product;
 import com.tsungweiho.ilovezappos.utilities.AnimUtilities;
-import com.tsungweiho.ilovezappos.utilities.PHPUtilities;
 
 
 public class MainActivity extends AppCompatActivity implements FragmentTag{
 
     private String TAG = "MainActivity";
+    private static Context context;
     private MainListener mainListener;
-    //Functions
+    //functions
+    private FragmentManager fm;
     private AnimUtilities mAnimUtilities;
+    private InputMethodManager inputMethodManager;
     //UI widgets
-    private ImageButton btnSearch, btnCart;
-    private EditText edSearch;
+    private FrameLayout flSearch;
+    private ImageButton btnBack, btnSearch, btnCart, btnDropDownSearch;
     private TextView tvCartItemCount;
+    private EditText edSearch;
     private boolean ifSearchShown = false;
+    //Window size
+    public static int windowWidth;
+    public static int windowHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,49 +49,105 @@ public class MainActivity extends AppCompatActivity implements FragmentTag{
     }
 
     private void init() {
-        mAnimUtilities = new AnimUtilities(this);
+        context = MainActivity.this;
+        mAnimUtilities = new AnimUtilities(context);
         mainListener = new MainListener();
+        getWindowSize();
+        flSearch = (FrameLayout) findViewById(R.id.activity_main_layout_search);
+        btnBack = (ImageButton) findViewById(R.id.activity_main_btn_back);
         btnSearch = (ImageButton) findViewById(R.id.activity_main_btn_search);
-        btnSearch.setOnClickListener(mainListener);
+        btnDropDownSearch = (ImageButton) findViewById(R.id.activity_main_dropdown_search);
         btnCart = (ImageButton) findViewById(R.id.activity_main_btn_cart);
         edSearch = (EditText) findViewById(R.id.activity_main_ed_search);
         tvCartItemCount = (TextView) findViewById(R.id.activity_main_tv_cart_count);
-        edSearch.setOnEditorActionListener(mainListener);
+        setAllListeners();
         setFragment(new ProductFragment(), ProductFragment);
     }
 
+    private void getWindowSize(){
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        windowHeight = displaymetrics.heightPixels;
+        windowWidth = displaymetrics.widthPixels;
+    }
+
+    private void setAllListeners(){
+        btnBack.setOnClickListener(mainListener);
+        btnSearch.setOnClickListener(mainListener);
+        edSearch.setOnEditorActionListener(mainListener);
+        btnDropDownSearch.setOnClickListener(mainListener);
+    }
+
+    private void hideSoftKeyboard(){
+        View view = this.getCurrentFocus();
+        if (null == inputMethodManager){
+            inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static Context getContext(){
+        return context;
+    }
+
+    private void executeSearch(){
+        if (!"".equalsIgnoreCase(edSearch.getText().toString())){
+            if (null == fm) {
+                fm = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
+            }
+            ProductFragment productFragment = (ProductFragment) fm.findFragmentByTag(ProductFragment);
+            productFragment.queryTerm(edSearch.getText().toString());
+        }
+    }
 
     private class MainListener implements View.OnClickListener, TextView.OnEditorActionListener{
 
         @Override
         public void onClick(View view) {
             switch (view.getId()){
+                case R.id.activity_main_btn_back:
+                    setFragment(fm.findFragmentByTag(ProductFragment), ProductFragment);
+                    break;
                 case R.id.activity_main_btn_search:
                     if (ifSearchShown) {
-                        edSearch.setVisibility(View.GONE);
+                        flSearch.setVisibility(View.GONE);
+                        btnSearch.setImageDrawable(getDrawable(R.mipmap.ic_search));
                         ifSearchShown = false;
                     } else {
-                        mAnimUtilities.setEdAnimToVisible(edSearch);
+                        mAnimUtilities.setflSearchAnimToVisible(flSearch);
+                        btnSearch.setImageDrawable(getDrawable(R.mipmap.ic_fold));
                         ifSearchShown = true;
                     }
                     break;
                 case R.id.activity_main_btn_cart:
                     break;
+                case R.id.activity_main_dropdown_search:
+                    executeSearch();
+                    hideSoftKeyboard();
+                    break;
             }
         }
 
         @Override
-        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                //TODO search
-                return true;
-            }
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            executeSearch();
             return false;
         }
     }
 
     public void setFragment(Fragment fragment, String fragmentTag) {
         //action bar switch
+        switch (fragmentTag){
+            case ProductFragment:
+                btnBack.setVisibility(View.GONE);
+                break;
+            case CartFragment:
+                btnBack.setVisibility(View.VISIBLE);
+                break;
+            case ProductUrlFragment:
+                btnBack.setVisibility(View.VISIBLE);
+                break;
+        }
         if (fragmentTag.equalsIgnoreCase(ProductFragment)){
 
         } else {

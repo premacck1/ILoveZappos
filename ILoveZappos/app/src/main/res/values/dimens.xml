@@ -5,9 +5,11 @@
     <dimen name="activity_main_title_logo_size">56dp</dimen>
     <dimen name="activity_main_double_title_logo_size">112dp</dimen>
 
+    <!--follow zappos image resolution-->
+    <dimen name="activity_main_img_size">72dp</dimen>
+
     <!--follow material design rules-->
     <dimen name="activity_main_space">4dp</dimen>
-    <dimen name="activity_main_img_size">240dp</dimen>
     <dimen name="activity_main_floating_btn_margin">16dp</dimen>
     <dimen name="activity_main_notification_icon">16dp</dimen>
 </resources>

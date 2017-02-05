@@ -1,10 +1,21 @@
 package com.tsungweiho.ilovezappos.utilities;
 
 import android.content.Context;
+import android.content.Entity;
+import android.net.http.AndroidHttpClient;
+import android.util.Log;
 
 import com.tsungweiho.ilovezappos.constants.URLConstants;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -25,37 +36,16 @@ public class PHPUtilities implements URLConstants {
         this.context = context;
     }
 
-    private String initData(String key, String value) throws UnsupportedEncodingException {
-        return URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(value, "UTF-8");
-    }
-
-    private String appendData(String data, String key, String value) throws UnsupportedEncodingException {
-        return data + "&" + URLEncoder.encode(key, "UTF-8") + "=" + URLEncoder.encode(value, "UTF-8");
-    }
-
-    private String sendBuffer(String url, String data) throws Exception {
-        URLConnection conn = new URL(url).openConnection();
-
-        conn.setDoOutput(true);
-        OutputStreamWriter wr = new OutputStreamWriter(
-                conn.getOutputStream());
-        wr.write(data);
-        wr.flush();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                conn.getInputStream()));
-
-        StringBuilder sb = new StringBuilder();
-        String line;
-        // Read Server Response
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-        return sb.toString();
+    private String sendHttpGetRequest(String url) throws Exception {
+        HttpClient client = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(url);
+        HttpResponse response = client.execute(httpGet);
+        HttpEntity resEntity = response.getEntity();
+        return EntityUtils.toString(resEntity);
     }
 
     public String queryProduct(String term) throws Exception {
-        String data = initData("term", term);
-        data = appendData(data, "key", QUERY_KEY);
-        return sendBuffer(QUERY_URL, data);
+        String queryUrl = SERVER_QUERY_URL + term + "&" + QUERY_KEY;
+        return sendHttpGetRequest(queryUrl);
     }
 }
