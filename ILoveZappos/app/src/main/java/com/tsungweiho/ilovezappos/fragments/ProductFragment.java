@@ -2,6 +2,7 @@ package com.tsungweiho.ilovezappos.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.tsungweiho.ilovezappos.R;
 import com.tsungweiho.ilovezappos.constants.FragmentTag;
 import com.tsungweiho.ilovezappos.constants.ProductResponseConstants;
@@ -39,12 +41,15 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
     private String TAG = "ProductFragment";
     //Functions
     private PHPUtilities mPHPUtilities;
-    private AnimUtilities mAnimUtilities;
-    private DialogManager mDialogManager;
+    public AnimUtilities mAnimUtilities;
+    private DialogManager dialogManager;
     private FragmentProductBinding binding;
+    private SharedPreferences sharedPreferences;
+    // Sharepreference params
     private Product currentProduct;
+    private String CURRENT_PRODUCT = "CURRENT_PRODUCT";
     //UI Widgets
-    private FloatingActionButton btnAddToCart;
+    public FloatingActionButton btnAddToCart;
     private LinearLayout llProduct, btnViewWeb;
     private TextView tvStart;
 
@@ -61,20 +66,21 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
     private void init() {
         mPHPUtilities = new PHPUtilities(context);
         mAnimUtilities = new AnimUtilities(context);
-        mDialogManager = new DialogManager(context);
+        dialogManager = new DialogManager(context);
         findViews();
     }
 
     private void findViews() {
         btnAddToCart = (FloatingActionButton) view.findViewById(R.id.fragment_product_btn_add);
         btnAddToCart.bringToFront();
+        btnAddToCart.setVisibility(View.GONE);
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialogManager.showProductDialog(currentProduct);
+                mAnimUtilities.hideFABAnim(btnAddToCart);
+                dialogManager.showProductDialog(currentProduct);
             }
         });
-        btnAddToCart.setVisibility(View.GONE);
         // The floating action button need to wait its anchor (llProduct) ready
         llProduct = (LinearLayout) view.findViewById(R.id.fragment_product_layout_product);
         llProduct.setVisibility(View.INVISIBLE);
@@ -104,6 +110,11 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
     @Override
     public void onResume() {
         super.onResume();
+        sharedPreferences = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(CURRENT_PRODUCT, "");
+        currentProduct = gson.fromJson(json, Product.class);
+
         if (null != currentProduct) {
             binding.setProduct(currentProduct);
             llProduct.setVisibility(View.VISIBLE);
@@ -112,6 +123,17 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
             tvStart.setVisibility(View.VISIBLE);
             tvStart.setText(context.getString(R.string.fragment_product_start_search));
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String savedProduct = gson.toJson(currentProduct);
+        prefsEditor.putString(CURRENT_PRODUCT, savedProduct);
+        prefsEditor.apply();
     }
 
     private class TaskQueryProduct extends AsyncTask<String, Void, String> {
@@ -150,7 +172,7 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
                         tvStart.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    mDialogManager.showAlertDialog(context.getString(R.string.fragment_product_noresult_dialog_title), context.getString(R.string.fragment_product_noresult_dialog_msg));
+                    dialogManager.showAlertDialog(context.getString(R.string.fragment_product_noresult_dialog_title), context.getString(R.string.fragment_product_noresult_dialog_msg));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

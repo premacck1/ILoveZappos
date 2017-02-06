@@ -1,6 +1,7 @@
 package com.tsungweiho.ilovezappos;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
     private InputMethodManager inputMethodManager;
     private SQLCartDB sqlCartDB;
     private DialogManager dialogManager;
+    private SharedPreferences sharedPreferences;
+    // Sharepreference params
+    private String CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
+    private String currentFragment = "";
     //UI widgets
     private FrameLayout flSearch;
     private ImageButton btnBack, btnSearch, btnCart, btnDropDownSearch;
@@ -63,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
         findViews();
         setTvCartItemCount();
         setAllListeners();
-        setFragment(new ProductFragment(), ProductFragment);
+        setFragment(ProductFragment);
     }
 
     private void getWindowSize() {
@@ -125,13 +130,29 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sharedPreferences = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+        currentFragment = sharedPreferences.getString(CURRENT_FRAGMENT, ProductFragment);
+        setFragment(currentFragment);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        prefsEditor.putString(CURRENT_FRAGMENT, currentFragment);
+        prefsEditor.apply();
+    }
+
     private class MainListener implements View.OnClickListener, TextView.OnEditorActionListener {
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.activity_main_btn_back:
-                    setFragment(fm.findFragmentByTag(ProductFragment), ProductFragment);
+                    setFragment(ProductFragment);
                     break;
                 case R.id.activity_main_btn_search:
                     if (ifSearchShown) {
@@ -145,11 +166,7 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
                     }
                     break;
                 case R.id.activity_main_btn_cart:
-                    com.tsungweiho.ilovezappos.fragments.CartFragment cartFragment = (CartFragment) fm.findFragmentByTag(CartFragment);
-                    if (null == cartFragment) {
-                        cartFragment = new CartFragment();
-                    }
-                    setFragment(cartFragment, CartFragment);
+                    setFragment(CartFragment);
                     break;
                 case R.id.activity_main_dropdown_search:
                     executeSearch();
@@ -164,20 +181,18 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
         }
     }
 
-    public void setFragment(Fragment fragment, String fragmentTag) {
-        try {
-            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
-                    .beginTransaction();
-            transaction.replace(R.id.activity_main_container, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        }
-
+    public void setFragment(String fragmentTag) {
+        Fragment fragment = null;
+        currentFragment = fragmentTag;
         //action bar switch
         switch (fragmentTag) {
             case ProductFragment:
                 btnBack.setVisibility(View.GONE);
                 btnSearch.setVisibility(View.VISIBLE);
+                fragment = fm.findFragmentByTag(ProductFragment);
+                if (null == fragment) {
+                    fragment = new ProductFragment();
+                }
                 break;
             case CartFragment:
                 btnBack.setVisibility(View.VISIBLE);
@@ -185,7 +200,19 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
                 flSearch.setVisibility(View.GONE);
                 btnSearch.setImageDrawable(getResources().getDrawable(R.mipmap.ic_search));
                 ifSearchShown = false;
+                fragment = fm.findFragmentByTag(CartFragment);
+                if (null == fragment) {
+                    fragment = new CartFragment();
+                }
                 break;
+        }
+        try {
+            android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
+                    .beginTransaction();
+            transaction.replace(R.id.activity_main_container, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
+            edSearch.clearFocus();
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
         }
     }
 }

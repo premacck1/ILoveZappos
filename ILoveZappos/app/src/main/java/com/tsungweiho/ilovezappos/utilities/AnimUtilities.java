@@ -19,6 +19,7 @@ public class AnimUtilities {
 
     // Animation duration
     private int ANIM_DURATION = 1000;
+    private int FAST_ANIM_DURATION = 500;
 
     public AnimUtilities(Context context) {
         this.context = context;
@@ -38,6 +39,15 @@ public class AnimUtilities {
         Animation am = android.view.animation.AnimationUtils.loadAnimation(
                 floatingActionButton.getContext(), R.anim.design_fab_in);
         am.setDuration(ANIM_DURATION);
+        floatingActionButton.startAnimation(am);
+    }
+
+    public void hideFABAnim(final FloatingActionButton floatingActionButton) {
+        floatingActionButton.clearAnimation();
+        floatingActionButton.setVisibility(View.INVISIBLE);
+        Animation am = android.view.animation.AnimationUtils.loadAnimation(
+                floatingActionButton.getContext(), R.anim.design_fab_out);
+        am.setDuration(FAST_ANIM_DURATION);
         floatingActionButton.startAnimation(am);
     }
 

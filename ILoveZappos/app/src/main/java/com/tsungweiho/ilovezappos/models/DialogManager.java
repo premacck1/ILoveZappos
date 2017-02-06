@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,17 +15,19 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tsungweiho.ilovezappos.MainActivity;
 import com.tsungweiho.ilovezappos.R;
+import com.tsungweiho.ilovezappos.constants.FragmentTag;
 import com.tsungweiho.ilovezappos.database.SQLCartDB;
+import com.tsungweiho.ilovezappos.fragments.ProductFragment;
 import com.tsungweiho.ilovezappos.objects.Product;
 
 /**
  * Created by tsung on 2017/2/5.
  */
 
-public class DialogManager {
+public class DialogManager implements FragmentTag {
 
-    private String TAG = "DialogManager";
     private Context context;
+    private FragmentManager fm;
 
     public DialogManager(Context context) {
         this.context = context;
@@ -44,9 +47,27 @@ public class DialogManager {
         alertDialog.show();
     }
 
+    public void showAlertDialogOnFAB(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (null == fm)
+                    fm = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
+                ProductFragment productFragment = (ProductFragment) fm.findFragmentByTag(ProductFragment);
+                productFragment.mAnimUtilities.showFABAnim(productFragment.btnAddToCart);
+            }
+        });
+
+        alertDialog.show();
+    }
+
     public void showProductDialog(final Product product) {
-        if (null == product){
-            showAlertDialog(context.getString(R.string.fragment_product_err_dialog_title), context.getString(R.string.fragment_product_err_dialog_msg));
+        if (null == product) {
+            showAlertDialogOnFAB(context.getString(R.string.fragment_product_err_dialog_title), context.getString(R.string.fragment_product_err_dialog_msg));
             return;
         }
 
@@ -70,6 +91,10 @@ public class DialogManager {
             public void onClick(View view) {
                 dialog.dismiss();
                 sqlCartDB.insertDB(product);
+                if (null == fm)
+                    fm = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
+                ProductFragment productFragment = (ProductFragment) fm.findFragmentByTag(ProductFragment);
+                productFragment.mAnimUtilities.showFABAnim(productFragment.btnAddToCart);
                 ((MainActivity) MainActivity.getContext()).setTvCartItemCount();
             }
         });

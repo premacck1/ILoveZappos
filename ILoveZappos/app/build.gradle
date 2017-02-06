@@ -35,4 +35,5 @@ dependencies {
     compile 'org.apache.httpcomponents:httpcomponents-client:4.5.3'
     compile 'org.apache.httpcomponents:httpcomponents-core:4.4.6'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.google.code.gson:gson:2.8.0'
 }
