@@ -25,6 +25,6 @@ From left to right:
 - View cart items
 
 #### The below demo is shown in gif. If the it does not animate, please click on it directly.
-<img src="http://i.imgur.com/yJr8PIAh.gif" title="source: imgur.com" width="270" height="360"/>
+<img src="https://camo.githubusercontent.com/5c1674ea7f03a4a523a184e889fb1c26471b8c98/687474703a2f2f692e696d6775722e636f6d2f794a7238504941682e676966" title="source: imgur.com" width="270" height="360"/>
 <img src="http://i.imgur.com/9ziV2nbh.gif" title="source: imgur.com" width="270" height="360"/>
 <img src="http://i.imgur.com/bMqDbqAh.gif" title="source: imgur.com" width="270" height="360"/>
