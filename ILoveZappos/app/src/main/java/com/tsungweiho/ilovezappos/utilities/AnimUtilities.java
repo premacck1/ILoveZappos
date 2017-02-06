@@ -1,14 +1,11 @@
 package com.tsungweiho.ilovezappos.utilities;
 
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tsungweiho.ilovezappos.R;
@@ -40,16 +37,6 @@ public class AnimUtilities {
         floatingActionButton.setVisibility(View.VISIBLE);
         Animation am = android.view.animation.AnimationUtils.loadAnimation(
                 floatingActionButton.getContext(), R.anim.design_fab_in);
-        am.setDuration(ANIM_DURATION);
-        floatingActionButton.startAnimation(am);
-    }
-
-
-    public void hideFABAnim(final FloatingActionButton floatingActionButton) {
-        floatingActionButton.clearAnimation();
-        floatingActionButton.setVisibility(View.VISIBLE);
-        Animation am = android.view.animation.AnimationUtils.loadAnimation(
-                floatingActionButton.getContext(), R.anim.design_fab_out);
         am.setDuration(ANIM_DURATION);
         floatingActionButton.startAnimation(am);
     }

@@ -2,7 +2,6 @@ package com.tsungweiho.ilovezappos.models;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

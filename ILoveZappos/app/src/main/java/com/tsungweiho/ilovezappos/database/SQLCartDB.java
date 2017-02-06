@@ -67,41 +67,12 @@ public class SQLCartDB extends SQLiteOpenHelper implements SQLDBConstants {
         return rowId;
     }
 
-    public int updateDB(Product product) {
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(PRODUCT_ID, product.getProductId());
-        values.put(PRODUCT_BRAND, product.getBrandName());
-        values.put(PRODUCT_NAME, product.getProductName());
-        values.put(PRODUCT_IMGURL, product.getImgUrl());
-        values.put(PRODUCT_ORIPRICE, product.getOriginalPrice());
-        values.put(PRODUCT_PRICE, product.getPrice());
-        values.put(PRODUCT_PERCENTOFF, product.getPercentOff());
-        values.put(PRODUCT_URL, product.getProductUrl());
-        values.put(COLOR_ID, product.getColorId());
-        String whereClause = PRODUCT_ID + "='" + product.getProductId() + "'";
-        int count = db.update(TABLENAME, values, whereClause, null);
-        db.close();
-        return count;
-    }
-
     public int deleteSingleProduct(int databaseId) {
         SQLiteDatabase db = getWritableDatabase();
         String whereClause = ID + "='" + databaseId + "'";
         int count = db.delete(TABLENAME, whereClause, null);
         db.close();
         return count;
-    }
-
-    public boolean checkIfProductExistById(String productId) {
-        Product product = queryProductByProductId(productId);
-        boolean ifExist;
-        if (null != product) {
-            ifExist = true;
-        } else {
-            ifExist = false;
-        }
-        return ifExist;
     }
 
     public Product queryProductByProductId(String searchId) {
@@ -126,13 +97,6 @@ public class SQLCartDB extends SQLiteOpenHelper implements SQLDBConstants {
         } else {
             return null;
         }
-    }
-
-    public int deleteAll() {
-        SQLiteDatabase db = getWritableDatabase();
-        int count = db.delete(TABLENAME, null, null);
-        db.close();
-        return count;
     }
 
     public ArrayList<Product> getAllCartList() {

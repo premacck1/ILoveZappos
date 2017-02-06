@@ -24,9 +24,6 @@ public class Product {
     private String productName;
     private String pricesrow;
 
-    public Product() {
-    }
-
     public Product(String brandName, String thumbnailImageUrl, String productId, String originalPrice, String colorId, String price, String percentOff, String productUrl, String productName) {
         this.brandName = brandName;
         this.thumbnailImageUrl = thumbnailImageUrl;

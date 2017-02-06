@@ -48,24 +48,19 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = MainActivity.this;
         init();
     }
 
     private void init() {
-        context = MainActivity.this;
+        // Init utilities
         mAnimUtilities = new AnimUtilities(this);
         dialogManager = new DialogManager(this);
         mainListener = new MainListener();
         sqlCartDB = new SQLCartDB(this);
         fm = getSupportFragmentManager();
         getWindowSize();
-        flSearch = (FrameLayout) findViewById(R.id.activity_main_layout_search);
-        btnBack = (ImageButton) findViewById(R.id.activity_main_btn_back);
-        btnSearch = (ImageButton) findViewById(R.id.activity_main_btn_search);
-        btnDropDownSearch = (ImageButton) findViewById(R.id.activity_main_dropdown_search);
-        btnCart = (ImageButton) findViewById(R.id.activity_main_btn_cart);
-        edSearch = (EditText) findViewById(R.id.activity_main_ed_search);
-        tvCartItemCount = (TextView) findViewById(R.id.activity_main_tv_cart_count);
+        findViews();
         setTvCartItemCount();
         setAllListeners();
         setFragment(new ProductFragment(), ProductFragment);
@@ -76,6 +71,16 @@ public class MainActivity extends AppCompatActivity implements FragmentTag {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         windowHeight = displaymetrics.heightPixels;
         windowWidth = displaymetrics.widthPixels;
+    }
+
+    private void findViews() {
+        flSearch = (FrameLayout) findViewById(R.id.activity_main_layout_search);
+        btnBack = (ImageButton) findViewById(R.id.activity_main_btn_back);
+        btnSearch = (ImageButton) findViewById(R.id.activity_main_btn_search);
+        btnDropDownSearch = (ImageButton) findViewById(R.id.activity_main_dropdown_search);
+        btnCart = (ImageButton) findViewById(R.id.activity_main_btn_cart);
+        edSearch = (EditText) findViewById(R.id.activity_main_ed_search);
+        tvCartItemCount = (TextView) findViewById(R.id.activity_main_tv_cart_count);
     }
 
     private void setAllListeners() {
