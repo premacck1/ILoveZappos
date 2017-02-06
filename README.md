@@ -25,6 +25,11 @@ From left to right:
 - View cart items
 
 #### The below demo is shown in gif. If the it does not animate, please click on it directly.
-<img src="https://camo.githubusercontent.com/5c1674ea7f03a4a523a184e889fb1c26471b8c98/687474703a2f2f692e696d6775722e636f6d2f794a7238504941682e676966" title="source: imgur.com" width="270" height="360"/>
-<img src="http://i.imgur.com/9ziV2nbh.gif" title="source: imgur.com" width="270" height="360"/>
-<img src="http://i.imgur.com/bMqDbqAh.gif" title="source: imgur.com" width="270" height="360"/>
+<a href="http://imgur.com/yJr8PIA"><img src="http://i.imgur.com/yJr8PIAh.gif" title="source: imgur.com" width="270" height="360" /></a>
+<a href="http://imgur.com/9ziV2nbh"><img src="http://i.imgur.com/9ziV2nbh.gif" title="source: imgur.com" width="270" height="360"/></a>
+<a href="http://imgur.com/bMqDbqAh"><img src="http://i.imgur.com/bMqDbqAh.gif" title="source: imgur.com" width="270" height="360"/></a>
+
+#### Youtube link for demos
+- <a href="https://youtu.be/pTNeMyxO4Wg">Demo 1: Search a product</a>
+- <a href="https://youtu.be/Ui2DHoIMy10">Demo 2: Add to cart</a>
+- <a href="https://youtu.be/3DyPGpnsnFk">Demo 3: View cart items</a>
