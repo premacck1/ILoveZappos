@@ -19,7 +19,11 @@ This challenge is to build an app that takes input from the user as a search que
 <a href="http://imgur.com/ArhhXtM"><img src="http://i.imgur.com/ArhhXtM.png" title="source: imgur.com" width="720"/></a>
 
 ### Demo: 
-![Search a product image](http://i.imgur.com/yJr8PIAh.gif =270x360 "Search a product") ![alt-text-2](http://i.imgur.com/9ziV2nbh.gif "title-2") ![alt-text-2](http://i.imgur.com/bMqDbqAh.gif "title-2")
+#### The below demo is shown in gif. If the it does not animate, please click on it directly.
+From left to right:
+1. Search a product
+2. Add to cart
+3. view cart items
 <a href="http://imgur.com/yJr8PIA"><img src="http://i.imgur.com/yJr8PIAh.gif" title="source: imgur.com" width="270" height="360"/></a>
 <a href="http://imgur.com/9ziV2nb"><img src="http://i.imgur.com/9ziV2nbh.gif" title="source: imgur.com" width="270" height="360"/></a>
 <a href="http://imgur.com/bMqDbqA"><img src="http://i.imgur.com/bMqDbqAh.gif" title="source: imgur.com" width="270" height="360"/></a>
