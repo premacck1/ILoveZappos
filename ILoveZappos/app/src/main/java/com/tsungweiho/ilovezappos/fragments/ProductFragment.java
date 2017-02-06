@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -45,6 +46,7 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
     private DialogManager dialogManager;
     private FragmentProductBinding binding;
     private SharedPreferences sharedPreferences;
+    private Handler animHandler;
     // Sharepreference params
     private Product currentProduct;
     private String CURRENT_PRODUCT = "CURRENT_PRODUCT";
@@ -105,6 +107,17 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
     public void queryTerm(String queryString) {
         tvStart.setVisibility(View.GONE);
         new TaskQueryProduct().execute(queryString);
+    }
+
+    public void setAnimAddtoCart() {
+        mAnimUtilities.showAddToCartFABAnim(btnAddToCart);
+        animHandler = new Handler();
+        animHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAnimUtilities.switchFABIconAnim(btnAddToCart);
+            }
+        }, 3000);
     }
 
     @Override

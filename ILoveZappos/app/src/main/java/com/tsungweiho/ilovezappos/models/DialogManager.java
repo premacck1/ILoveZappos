@@ -27,10 +27,15 @@ import com.tsungweiho.ilovezappos.objects.Product;
 public class DialogManager implements FragmentTag {
 
     private Context context;
+    // Link to ProductFragment
     private FragmentManager fm;
+    private ProductFragment productFragment;
 
     public DialogManager(Context context) {
         this.context = context;
+        if (null == fm)
+            fm = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
+        productFragment = (ProductFragment) fm.findFragmentByTag(ProductFragment);
     }
 
     public void showAlertDialog(String title, String message) {
@@ -62,6 +67,13 @@ public class DialogManager implements FragmentTag {
             }
         });
 
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                productFragment.mAnimUtilities.showFABAnim(productFragment.btnAddToCart);
+            }
+        });
+
         alertDialog.show();
     }
 
@@ -83,19 +95,16 @@ public class DialogManager implements FragmentTag {
         TextView tvPrice = (TextView) dialogView.findViewById(R.id.view_product_dialog_tv_price);
         TextView tvOriginalPrice = (TextView) dialogView.findViewById(R.id.view_product_dialog_tv_oriprice);
         LinearLayout llDialog = (LinearLayout) dialogView.findViewById(R.id.view_product_dialog_layout);
+        LinearLayout btnAdd = (LinearLayout) dialogView.findViewById(R.id.view_product_dialog_ll_add);
         llDialog.setMinimumWidth((int) (MainActivity.windowWidth * 0.75));
 
-        LinearLayout btnAdd = (LinearLayout) dialogView.findViewById(R.id.view_product_dialog_ll_add);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
                 sqlCartDB.insertDB(product);
-                if (null == fm)
-                    fm = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
-                ProductFragment productFragment = (ProductFragment) fm.findFragmentByTag(ProductFragment);
-                productFragment.mAnimUtilities.showFABAnim(productFragment.btnAddToCart);
                 ((MainActivity) MainActivity.getContext()).setTvCartItemCount();
+                productFragment.setAnimAddtoCart();
             }
         });
 
@@ -117,6 +126,13 @@ public class DialogManager implements FragmentTag {
         tvBrand.setText(product.getBrandName());
         tvProduct.setText(product.getProductName());
         tvPrice.setText(product.getPrice());
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                productFragment.mAnimUtilities.showFABAnim(productFragment.btnAddToCart);
+            }
+        });
 
         dialog.show();
     }

@@ -1,6 +1,7 @@
 package com.tsungweiho.ilovezappos.utilities;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.animation.Animation;
@@ -33,22 +34,55 @@ public class AnimUtilities {
         am.startNow();
     }
 
-    public void showFABAnim(final FloatingActionButton floatingActionButton) {
-        floatingActionButton.clearAnimation();
-        floatingActionButton.setVisibility(View.VISIBLE);
+    public void showFABAnim(final FloatingActionButton fab) {
+        fab.clearAnimation();
+        fab.setVisibility(View.VISIBLE);
         Animation am = android.view.animation.AnimationUtils.loadAnimation(
-                floatingActionButton.getContext(), R.anim.design_fab_in);
+                fab.getContext(), R.anim.design_fab_in);
         am.setDuration(ANIM_DURATION);
-        floatingActionButton.startAnimation(am);
+        fab.startAnimation(am);
     }
 
-    public void hideFABAnim(final FloatingActionButton floatingActionButton) {
-        floatingActionButton.clearAnimation();
-        floatingActionButton.setVisibility(View.INVISIBLE);
+    public void hideFABAnim(final FloatingActionButton fab) {
+        fab.clearAnimation();
+        fab.setVisibility(View.INVISIBLE);
         Animation am = android.view.animation.AnimationUtils.loadAnimation(
-                floatingActionButton.getContext(), R.anim.design_fab_out);
+                fab.getContext(), R.anim.design_fab_out);
         am.setDuration(FAST_ANIM_DURATION);
-        floatingActionButton.startAnimation(am);
+        fab.startAnimation(am);
+    }
+
+    public void showAddToCartFABAnim(final FloatingActionButton fab) {
+        fab.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.light_green)));
+        fab.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_check));
+        showFABAnim(fab);
+    }
+
+    public void switchFABIconAnim(final FloatingActionButton fab) {
+        // fade out animation
+        fab.clearAnimation();
+        fab.setVisibility(View.VISIBLE);
+        Animation amOut = android.view.animation.AnimationUtils.loadAnimation(
+                fab.getContext(), R.anim.design_fab_out);
+        amOut.setDuration(FAST_ANIM_DURATION);
+        amOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                // fade in animation
+                fab.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.colorAccent)));
+                fab.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_cart));
+                showFABAnim(fab);
+            }
+        });
+        fab.startAnimation(amOut);
     }
 
     public void showCartCountAnim(final TextView tvCartItemCount) {
