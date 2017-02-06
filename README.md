@@ -19,6 +19,6 @@ This challenge is to build an app that takes input from the user as a search que
 <a href="http://imgur.com/ArhhXtM"><img src="http://i.imgur.com/ArhhXtM.png" title="source: imgur.com" width="720"/></a>
 
 ### Demo: 
-<a href="http://imgur.com/yJr8PIAh"><img src="http://i.imgur.com/yJr8PIAh.gif" title="source: imgur.com" width="270"/></a>
+<a href="http://imgur.com/yJr8PIA"><img src="http://i.imgur.com/yJr8PIAh.gif" title="source: imgur.com" width="270"/></a>
 <a href="http://imgur.com/9ziV2nb"><img src="http://i.imgur.com/9ziV2nbh.gif" title="source: imgur.com" width="270"/></a>
 <a href="http://imgur.com/bMqDbqA"><img src="http://i.imgur.com/bMqDbqAh.gif" title="source: imgur.com" width="270"/></a>
