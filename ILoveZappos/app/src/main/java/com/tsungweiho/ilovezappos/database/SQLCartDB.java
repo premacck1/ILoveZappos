@@ -75,30 +75,6 @@ public class SQLCartDB extends SQLiteOpenHelper implements SQLDBConstants {
         return count;
     }
 
-    public Product queryProductByProductId(String searchId) {
-        SQLiteDatabase db = getReadableDatabase();
-        String[] columns = {PRODUCT_ID, PRODUCT_BRAND, PRODUCT_NAME, PRODUCT_IMGURL, PRODUCT_ORIPRICE, PRODUCT_PRICE, PRODUCT_PERCENTOFF, COLOR_ID, PRODUCT_URL};
-        String whereClause = PRODUCT_ID + " = ?;";
-        String[] whereArgs = {searchId};
-        Cursor cursor = db.query(TABLENAME, columns, whereClause, whereArgs,
-                null, null, null);
-        if (cursor.moveToNext()) {
-            String productId = cursor.getString(0);
-            String productBrand = cursor.getString(1);
-            String productName = cursor.getString(2);
-            String producImgUrl = cursor.getString(3);
-            String producOriPrice = cursor.getString(4);
-            String producPrice = cursor.getString(5);
-            String producPercentOff = cursor.getString(6);
-            String colorId = cursor.getString(7);
-            String producUrl = cursor.getString(8);
-            Product product = new Product(productBrand, producImgUrl, productId, producOriPrice, colorId, producPrice, producPercentOff, producUrl, productName);
-            return product;
-        } else {
-            return null;
-        }
-    }
-
     public ArrayList<Product> getAllCartList() {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Product> carttList = new ArrayList<Product>();
