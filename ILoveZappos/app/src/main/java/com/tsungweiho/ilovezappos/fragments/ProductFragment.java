@@ -1,7 +1,9 @@
 package com.tsungweiho.ilovezappos.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,7 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,8 +46,7 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
     //UI Widgets
     private FloatingActionButton btnAddToCart;
     private LinearLayout llProduct, btnViewWeb;
-    private TextView tvStart, tvCartItemCount;
-    private WebView webView;
+    private TextView tvStart;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,35 +63,37 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
         mAnimUtilities = new AnimUtilities(context);
         mDialogManager = new DialogManager(context);
         findViews();
-        btnAddToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mDialogManager.showProductDialog(currentProduct, "");
-            }
-        });
     }
 
     private void findViews() {
-        llProduct = (LinearLayout) view.findViewById(R.id.fragment_product_layout_product);
-        llProduct.setVisibility(View.GONE);
-        btnViewWeb = (LinearLayout) view.findViewById(R.id.fragment_product_ll_viewmore);
-        btnViewWeb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                webView.loadUrl(currentProduct.getProductUrl());
-            }
-        });
-        tvCartItemCount = (TextView) view.findViewById(R.id.activity_main_tv_cart_count);
         btnAddToCart = (FloatingActionButton) view.findViewById(R.id.fragment_product_btn_add);
         btnAddToCart.bringToFront();
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialogManager.showProductDialog(currentProduct, "");
+                mDialogManager.showProductDialog(currentProduct);
+            }
+        });
+        btnAddToCart.setVisibility(View.GONE);
+        // The floating action button need to wait its anchor (llProduct) ready
+        llProduct = (LinearLayout) view.findViewById(R.id.fragment_product_layout_product);
+        llProduct.setVisibility(View.INVISIBLE);
+        ViewTreeObserver viewTreeObserver = llProduct.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mAnimUtilities.showFABAnim(btnAddToCart);
+            }
+        });
+        btnViewWeb = (LinearLayout) view.findViewById(R.id.fragment_product_ll_viewmore);
+        btnViewWeb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentProduct.getProductUrl()));
+                startActivity(browserIntent);
             }
         });
         tvStart = (TextView) view.findViewById(R.id.fragment_product_tv_start);
-        webView = (WebView) view.findViewById(R.id.fragment_product_webview);
     }
 
     public void queryTerm(String queryString) {
@@ -99,8 +102,16 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
     }
 
     @Override
-    public void OnResume() {
-
+    public void onResume() {
+        super.onResume();
+        if (null != currentProduct) {
+            binding.setProduct(currentProduct);
+            llProduct.setVisibility(View.VISIBLE);
+            tvStart.setVisibility(View.GONE);
+        } else {
+            tvStart.setVisibility(View.VISIBLE);
+            tvStart.setText(context.getString(R.string.fragment_product_start_search));
+        }
     }
 
     private class TaskQueryProduct extends AsyncTask<String, Void, String> {
@@ -108,6 +119,7 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            llProduct.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -124,16 +136,21 @@ public class ProductFragment extends Fragment implements ProductResponseConstant
         @Override
         protected void onPostExecute(String result) {
             try {
-                JSONObject jsonObject = new JSONObject(result);
-                if (!"".equalsIgnoreCase(result)) {
+                if (!"".equalsIgnoreCase(result) && null != result) {
+                    JSONObject jsonObject = new JSONObject(result);
                     if (jsonObject.getInt(totalResultCount) > 0) {
-                        mAnimUtilities.setllSearchResultAnimToVisible(llProduct);
                         JSONArray jsonArray = jsonObject.getJSONArray(results);
                         //only return the first search result
                         JSONObject jsonData = jsonArray.getJSONObject(0);
                         currentProduct = new Product(jsonData.getString(brandName), jsonData.getString(imgUrl), jsonData.getString(productId), jsonData.getString(originalPrice), jsonData.getString(colorId), jsonData.getString(price), jsonData.getString(percentOff), jsonData.getString(productUrl), jsonData.getString(productName));
                         binding.setProduct(currentProduct);
+                        llProduct.setVisibility(View.VISIBLE);
+                    } else {
+                        tvStart.setText(context.getString(R.string.fragment_product_no_result));
+                        tvStart.setVisibility(View.VISIBLE);
                     }
+                } else {
+                    mDialogManager.showAlertDialog(context.getString(R.string.fragment_product_noresult_dialog_title), context.getString(R.string.fragment_product_noresult_dialog_msg));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

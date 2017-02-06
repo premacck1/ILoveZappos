@@ -1,7 +1,6 @@
 package com.tsungweiho.ilovezappos;
 
 import android.content.Context;
-import android.graphics.drawable.Icon;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +16,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.tsungweiho.ilovezappos.constants.FragmentTag;
+import com.tsungweiho.ilovezappos.database.SQLCartDB;
+import com.tsungweiho.ilovezappos.fragments.CartFragment;
 import com.tsungweiho.ilovezappos.fragments.ProductFragment;
+import com.tsungweiho.ilovezappos.models.DialogManager;
 import com.tsungweiho.ilovezappos.utilities.AnimUtilities;
 
 
-public class MainActivity extends AppCompatActivity implements FragmentTag{
+public class MainActivity extends AppCompatActivity implements FragmentTag {
 
     private String TAG = "MainActivity";
     private static Context context;
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements FragmentTag{
     private FragmentManager fm;
     private AnimUtilities mAnimUtilities;
     private InputMethodManager inputMethodManager;
+    private SQLCartDB sqlCartDB;
+    private DialogManager dialogManager;
     //UI widgets
     private FrameLayout flSearch;
     private ImageButton btnBack, btnSearch, btnCart, btnDropDownSearch;
@@ -44,14 +48,16 @@ public class MainActivity extends AppCompatActivity implements FragmentTag{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Product product = new Product("Test", "User");
         init();
     }
 
     private void init() {
         context = MainActivity.this;
-        mAnimUtilities = new AnimUtilities(context);
+        mAnimUtilities = new AnimUtilities(this);
+        dialogManager = new DialogManager(this);
         mainListener = new MainListener();
+        sqlCartDB = new SQLCartDB(this);
+        fm = getSupportFragmentManager();
         getWindowSize();
         flSearch = (FrameLayout) findViewById(R.id.activity_main_layout_search);
         btnBack = (ImageButton) findViewById(R.id.activity_main_btn_back);
@@ -60,70 +66,88 @@ public class MainActivity extends AppCompatActivity implements FragmentTag{
         btnCart = (ImageButton) findViewById(R.id.activity_main_btn_cart);
         edSearch = (EditText) findViewById(R.id.activity_main_ed_search);
         tvCartItemCount = (TextView) findViewById(R.id.activity_main_tv_cart_count);
+        setTvCartItemCount();
         setAllListeners();
         setFragment(new ProductFragment(), ProductFragment);
     }
 
-    private void getWindowSize(){
+    private void getWindowSize() {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         windowHeight = displaymetrics.heightPixels;
         windowWidth = displaymetrics.widthPixels;
     }
 
-    private void setAllListeners(){
+    private void setAllListeners() {
         btnBack.setOnClickListener(mainListener);
         btnSearch.setOnClickListener(mainListener);
+        btnCart.setOnClickListener(mainListener);
         edSearch.setOnEditorActionListener(mainListener);
         btnDropDownSearch.setOnClickListener(mainListener);
     }
 
-    private void hideSoftKeyboard(){
+    public void setTvCartItemCount() {
+        if (null == sqlCartDB)
+            sqlCartDB = new SQLCartDB(this);
+
+        if (sqlCartDB.getCartItemCount() > 0) {
+            tvCartItemCount.setText(String.valueOf(sqlCartDB.getCartItemCount()));
+            mAnimUtilities.showCartCountAnim(tvCartItemCount);
+        } else {
+            tvCartItemCount.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideSoftKeyboard() {
         View view = this.getCurrentFocus();
-        if (null == inputMethodManager){
-            inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (null == inputMethodManager) {
+            inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         }
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return context;
     }
 
-    private void executeSearch(){
-        if (!"".equalsIgnoreCase(edSearch.getText().toString())){
-            if (null == fm) {
-                fm = ((MainActivity) MainActivity.getContext()).getSupportFragmentManager();
-            }
+    private void executeSearch() {
+        if (!"".equalsIgnoreCase(edSearch.getText().toString())) {
             ProductFragment productFragment = (ProductFragment) fm.findFragmentByTag(ProductFragment);
             productFragment.queryTerm(edSearch.getText().toString());
+            hideSoftKeyboard();
+        } else {
+            dialogManager.showAlertDialog(this.getString(R.string.activity_main_err_dialog_title), this.getString(R.string.activity_main_err_dialog_msg));
         }
     }
 
-    private class MainListener implements View.OnClickListener, TextView.OnEditorActionListener{
+    private class MainListener implements View.OnClickListener, TextView.OnEditorActionListener {
 
         @Override
         public void onClick(View view) {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.activity_main_btn_back:
                     setFragment(fm.findFragmentByTag(ProductFragment), ProductFragment);
                     break;
                 case R.id.activity_main_btn_search:
                     if (ifSearchShown) {
                         flSearch.setVisibility(View.GONE);
-                        btnSearch.setImageDrawable(getDrawable(R.mipmap.ic_search));
+                        btnSearch.setImageDrawable(getResources().getDrawable(R.mipmap.ic_search));
                         ifSearchShown = false;
                     } else {
                         mAnimUtilities.setflSearchAnimToVisible(flSearch);
-                        btnSearch.setImageDrawable(getDrawable(R.mipmap.ic_fold));
+                        btnSearch.setImageDrawable(getResources().getDrawable(R.mipmap.ic_fold));
                         ifSearchShown = true;
                     }
                     break;
                 case R.id.activity_main_btn_cart:
+                    com.tsungweiho.ilovezappos.fragments.CartFragment cartFragment = (CartFragment) fm.findFragmentByTag(CartFragment);
+                    if (null == cartFragment) {
+                        cartFragment = new CartFragment();
+                    }
+                    setFragment(cartFragment, CartFragment);
                     break;
                 case R.id.activity_main_dropdown_search:
                     executeSearch();
-                    hideSoftKeyboard();
                     break;
             }
         }
@@ -136,33 +160,27 @@ public class MainActivity extends AppCompatActivity implements FragmentTag{
     }
 
     public void setFragment(Fragment fragment, String fragmentTag) {
-        //action bar switch
-        switch (fragmentTag){
-            case ProductFragment:
-                btnBack.setVisibility(View.GONE);
-                break;
-            case CartFragment:
-                btnBack.setVisibility(View.VISIBLE);
-                break;
-            case ProductUrlFragment:
-                btnBack.setVisibility(View.VISIBLE);
-                break;
-        }
-        if (fragmentTag.equalsIgnoreCase(ProductFragment)){
-
-        } else {
-
-        }
-
         try {
             android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
                     .beginTransaction();
-            // TODO: 2015/11/13 don't addtoBackStacks or load all fragment, and chagne them. Don't save same fragment in stacks.
             transaction.replace(R.id.activity_main_container, fragment, fragmentTag).addToBackStack(fragmentTag).commit();
-            transaction.commit();
-
         } catch (Exception e) {
-            Log.e("MainActivity", e.toString());
+            Log.e(TAG, e.toString());
+        }
+
+        //action bar switch
+        switch (fragmentTag) {
+            case ProductFragment:
+                btnBack.setVisibility(View.GONE);
+                btnSearch.setVisibility(View.VISIBLE);
+                break;
+            case CartFragment:
+                btnBack.setVisibility(View.VISIBLE);
+                btnSearch.setVisibility(View.GONE);
+                flSearch.setVisibility(View.GONE);
+                btnSearch.setImageDrawable(getResources().getDrawable(R.mipmap.ic_search));
+                ifSearchShown = false;
+                break;
         }
     }
 }

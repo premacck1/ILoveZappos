@@ -2,11 +2,23 @@
     <string name="app_name">ILoveZappos</string>
 
     <!--MainActivity-->
-    <string name="activity_main_start_search">Start to Search</string>
     <string name="activity_main_search_hint">Shoes, Clothing, Bags, etc.</string>
+
+    <!--MainActivity Dialog-->
+    <string name="activity_main_err_dialog_title">No Search Term Found</string>
+    <string name="activity_main_err_dialog_msg">Please enter at least one search keyword and click search button again.</string>
 
     <!--ProductFragment-->
     <string name="fragment_product_loading">Loading...</string>
     <string name="fragment_product_add">Add to Cart</string>
-    <string name="fragment_product_view_on_web">View on Website</string>
+    <string name="fragment_product_view_on_web">View on Zappos.com</string>
+    <string name="fragment_product_err_dialog_title">No specified Product</string>
+    <string name="fragment_product_err_dialog_msg">Please enter at least one search keyword and search a product.</string>
+    <string name="fragment_product_noresult_dialog_title">Connection Error</string>
+    <string name="fragment_product_noresult_dialog_msg">Please check your internet status.</string>
+    <string name="fragment_product_no_result">No result found.</string>
+    <string name="fragment_product_start_search">Start to Search</string>
+
+    <!--CartFragment-->
+    <string name="fragment_cart_norecord">No item in cart.</string>
 </resources>

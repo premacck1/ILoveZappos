@@ -41,6 +41,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_main_space"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@string/fragment_product_loading"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 

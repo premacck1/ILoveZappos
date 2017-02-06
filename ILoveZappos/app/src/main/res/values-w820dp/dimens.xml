@@ -6,6 +6,9 @@
     <dimen name="activity_vertical_margin">32dp</dimen>
     <dimen name="activity_main_title_logo_size">78dp</dimen>
     <dimen name="activity_main_double_title_logo_size">156dp</dimen>
+    <dimen name="activity_main_listview_margin">32dp</dimen>
+
+    <!--follow material design rules-->
     <dimen name="activity_main_floating_btn_margin">24dp</dimen>
     <dimen name="activity_main_notification_icon">24dp</dimen>
 </resources>

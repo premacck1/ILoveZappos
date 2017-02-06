@@ -5,9 +5,8 @@ package com.tsungweiho.ilovezappos.constants;
  */
 
 public interface FragmentTag {
-    public static final String packageName = "com.tsungweiho.ilovezappos";
-    public static final String ProductFragment = packageName + "ProductFragment";
-    public static final String CartFragment = packageName + "CartFragment";
-    public static final String ProductUrlFragment = packageName + "ProductUrlFragment";
+    String packageName = "com.tsungweiho.ilovezappos";
+    String ProductFragment = packageName + "ProductFragment";
+    String CartFragment = packageName + "CartFragment";
 
 }

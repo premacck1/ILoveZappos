@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tsungweiho.ilovezappos.MainActivity;
 import com.tsungweiho.ilovezappos.R;
+import com.tsungweiho.ilovezappos.database.SQLCartDB;
 import com.tsungweiho.ilovezappos.objects.Product;
 
 /**
@@ -35,20 +36,21 @@ public class DialogManager {
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
 
-        // Setting OK Button
         alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
 
-        // Showing Alert Message
         alertDialog.show();
     }
 
-    public void showProductDialog(Product product, String quality) {
-        if (null == product)
+    public void showProductDialog(final Product product) {
+        if (null == product){
+            showAlertDialog(context.getString(R.string.fragment_product_err_dialog_title), context.getString(R.string.fragment_product_err_dialog_msg));
             return;
+        }
 
+        final SQLCartDB sqlCartDB = new SQLCartDB(context);
         final Dialog dialog = new Dialog(context);
         LayoutInflater li = LayoutInflater.from(context);
         View dialogView = li.inflate(R.layout.view_product_dialog, null);
@@ -67,6 +69,8 @@ public class DialogManager {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                sqlCartDB.insertDB(product);
+                ((MainActivity) MainActivity.getContext()).setTvCartItemCount();
             }
         });
 

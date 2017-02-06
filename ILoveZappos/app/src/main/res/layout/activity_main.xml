@@ -24,8 +24,8 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/activity_main_space"
                     android:layout_gravity="left|center_vertical"
+                    android:layout_margin="@dimen/activity_main_space"
                     android:layout_weight="1">
 
                     <ImageButton
@@ -87,8 +87,8 @@
                             android:layout_gravity="right|top"
                             android:background="@drawable/background_cart_notification"
                             android:gravity="center_horizontal|center_vertical"
-                            android:text=""
-                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="1"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/white" />
                     </FrameLayout>
                 </LinearLayout>

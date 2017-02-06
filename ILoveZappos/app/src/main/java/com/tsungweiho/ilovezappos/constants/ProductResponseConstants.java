@@ -18,6 +18,4 @@ public interface ProductResponseConstants {
     String percentOff = "percentOff";
     String productUrl = "productUrl";
     String productName = "productName";
-
-    void OnResume();
 }
